@@ -1,0 +1,91 @@
+<nav class="navbar navbar-expand navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">{{ title }}</a>
+    <div class="navbar-collapse collapse">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link"
+                    href="https://accounts.spotify.com/authorize?client_id=8007f375daf64174aa67bc10fa3ea029&redirect_uri=http://localhost:4200&scope={{ scopes }}&response_type=token&state=123">
+                    Login
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="getArtistsAlbums()" href="javascript:void(0);">Get artists</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="getMySavedSongs()" href="javascript:void(0);">Get my songs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="getTopTracks()" href="javascript:void(0);">Get top tracks</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container" *ngIf="albums">
+    <div class="row">
+        <div class="col-sm">
+            <table class="table">
+                <tr *ngFor="let album of albums">
+                    <td>
+                        <p><b>{{ album.name }}</b></p>
+                        <small><i>{{ album.album_type }}</i></small>
+                    </td>
+                    <td>
+                        <span *ngFor="let artist of album.artists; let i = index;">
+                            {{ artist.name }}<span *ngIf="album.artists.length > i + 1">,</span>
+                        </span>
+                    </td>
+                    <td>
+                        <p>{{ album.release_date }}</p>
+                        <small><i>{{ album.available_markets.length }} markets</i></small>
+                    </td>
+                    <td>
+                        <img src="{{ album.images[0].url }}" class="img-thumbnail album">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="container" *ngIf="topTracks.length > 0">
+    <div class="row">
+        <div class="col-sm">
+            <table class="table toptracks">
+                <thead>
+                    <tr>
+                        <th colspan="4" class="text-center">Top Tracks</th>
+                    </tr>
+                    <tr>
+                        <th>Track</th>
+                        <th>Artist</th>
+                        <th>Popularity</th>
+                        <th># markets</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let track of topTracks">
+                        <td>
+                            <p><b>{{ track.name }}</b></p>
+                            <span class="badge badge-secondary" *ngIf="track.explicit == true">explicit</span>
+                        </td>
+                        <td>
+                            <span *ngFor="let artist of track.artists; let i = index;">
+                                {{ artist.name }}<span *ngIf="track.artists.length > i + 1">,</span>
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            {{ track.popularity }}
+                            <div class="progress">
+                                <div class="progress-bar" [style.width.%]="track.popularity"></div>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            {{ track.available_markets.length }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
